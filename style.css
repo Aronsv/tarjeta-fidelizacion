@@ -73,3 +73,13 @@ button {
   background: #6b4f3b;
   color: white;
 }
+/* ============================= */
+/* 🖼️ IMAGEN DENTRO DEL SELLO */
+/* ============================= */
+
+.sello img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;   /* recorta sin deformar */
+  border-radius: 50%;  /* lo hace circular */
+}
