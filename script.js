@@ -204,7 +204,7 @@ function mostrarPremio(total) {
     texto.innerText = "🍹 Tu trago favorito va por nuestra cuenta";
   }
 
-  popup.classList.remove("oculto");
+  popup.classList.add("mostrar");
 }
 
 
@@ -213,5 +213,6 @@ function mostrarPremio(total) {
 // =====================================================
 
 window.cerrarPopup = function () {
-  document.getElementById("popup").classList.add("oculto");
+  const popup = document.getElementById("popup");
+  popup.classList.remove("mostrar");
 };
