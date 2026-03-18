@@ -117,7 +117,14 @@ window.registrar = async function () {
     // -----------------------------
     // 🎉 MENSAJE DE ÉXITO
     // -----------------------------
-    mensaje.innerText = "✅ Registro guardado";
+    // 🎉 SI ES MULTIPLO DE 6 → MOSTRAR PREMIO
+const totalVisitas = (await getDocs(
+  query(collection(db, "visitas"), where("celular", "==", usuario))
+)).size;
+
+if (totalVisitas % 6 === 0) {
+  mostrarPremio(totalVisitas);
+}
     mensaje.style.color = "green";
     input.value = "";
 
@@ -203,7 +210,7 @@ function mostrarTarjeta(total) {
   // 🪜 CALCULAR NIVEL
   // -----------------------------
   const nivel = Math.floor(total / 6) + 1;
-  const progreso = total % 6;
+  const progreso = total % 6 === 0;
 
   // -----------------------------
   // 📝 TEXTO DE NIVEL
@@ -264,4 +271,34 @@ function mostrarTarjeta(total) {
     contenedor.appendChild(div);
   }
 }
+function mostrarPremio(total) {
+
+  const popup = document.getElementById("popup");
+  const texto = document.getElementById("mensajePremio");
+
+  const nivel = Math.floor(total / 6);
+
+  // -----------------------------
+  // 🎁 MENSAJE SEGÚN NIVEL
+  // -----------------------------
+  if (nivel === 1) {
+    texto.innerText = "☕ Tu bebida caliente va por nuestra cuenta";
+  } 
+  else if (nivel === 2) {
+    texto.innerText = "🍰 Tu postre favorito va por nuestra cuenta";
+  } 
+  else {
+    texto.innerText = "🍹 Tu trago favorito va por nuestra cuenta";
+  }
+
+  popup.classList.remove("oculto");
+}
+
+
+// -----------------------------
+// ❌ CERRAR POPUP
+// -----------------------------
+window.cerrarPopup = function () {
+  document.getElementById("popup").classList.add("oculto");
+};
 };
