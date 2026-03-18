@@ -1,21 +1,14 @@
 // =====================================================
-// 🔥 IMPORTAR FIREBASE (CORRECTO)
+// 🔥 IMPORTAR FIREBASE
 // =====================================================
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-
-import { 
-  getFirestore, 
-  collection, 
-  addDoc, 
-  query, 
-  where, 
-  getDocs 
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, query, where, getDocs } 
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 
 // =====================================================
-// ⚙️ CONFIGURACIÓN FIREBASE
+// ⚙️ CONFIG
 // =====================================================
 
 const firebaseConfig = {
@@ -27,13 +20,9 @@ const firebaseConfig = {
   appId: "1:256189396604:web:115c60825caf2def193bf9"
 };
 
-
-// =====================================================
-// 🚀 INICIALIZAR FIREBASE
-// =====================================================
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
 
 // =====================================================
 // 🧪 MODO PRUEBA
@@ -46,45 +35,31 @@ window.modoTest = function () {
   alert("🧪 Modo prueba activado");
 };
 
+
 // =====================================================
-// ✅ FUNCIÓN: REGISTRAR VISITA (CON VALIDACIÓN Y CONTROL POR DÍA)
+// ✅ REGISTRAR
 // =====================================================
 
 window.registrar = async function () {
 
-  // -----------------------------
-  // 📥 OBTENER DATOS DEL INPUT
-  // -----------------------------
   const input = document.getElementById("usuario");
   const mensaje = document.getElementById("mensaje");
   const usuario = input.value.trim();
 
-
-  // -----------------------------
-  // ⚠️ VALIDACIÓN BÁSICA
-  // -----------------------------
   if (usuario === "" || usuario.length !== 9) {
     mensaje.innerText = "⚠️ Número inválido";
     mensaje.style.color = "red";
     return;
   }
 
-
-  // -----------------------------
-  // 📅 DEFINIR RANGO DE "HOY"
-  // -----------------------------
   const hoy = new Date();
   hoy.setHours(0, 0, 0, 0);
 
   const mañana = new Date(hoy);
   mañana.setDate(mañana.getDate() + 1);
 
-
   try {
 
-    // -----------------------------
-    // 🔍 BUSCAR SI YA REGISTRÓ HOY
-    // -----------------------------
     const q = query(
       collection(db, "visitas"),
       where("celular", "==", usuario),
@@ -94,46 +69,32 @@ window.registrar = async function () {
 
     const querySnapshot = await getDocs(q);
 
-
-    // -----------------------------
-    // 🚫 SI YA EXISTE → BLOQUEAR
-    // -----------------------------
     if (!querySnapshot.empty && !modoPrueba) {
       mensaje.innerText = "⚠️ Ya registraste hoy";
       mensaje.style.color = "orange";
       return;
     }
 
-
-    // -----------------------------
-    // ✅ GUARDAR NUEVA VISITA
-    // -----------------------------
     await addDoc(collection(db, "visitas"), {
       celular: usuario,
       fecha: new Date()
     });
 
-
-    // -----------------------------
-    // 🎉 MENSAJE DE ÉXITO
-    // -----------------------------
-    // 🎉 SI ES MULTIPLO DE 6 → MOSTRAR PREMIO
-const totalVisitas = (await getDocs(
-  query(collection(db, "visitas"), where("celular", "==", usuario))
-)).size;
-
-if (totalVisitas > 0 && totalVisitas % 6 === 0) {
-  mostrarPremio(totalVisitas);
-}
+    mensaje.innerText = "✅ Registro guardado";
     mensaje.style.color = "green";
     input.value = "";
 
+    // 🔥 OBTENER TOTAL
+    const totalVisitas = (await getDocs(
+      query(collection(db, "visitas"), where("celular", "==", usuario))
+    )).size;
+
+    // 🎉 MOSTRAR PREMIO SOLO SI > 0
+    if (totalVisitas > 0 && totalVisitas % 6 === 0) {
+      mostrarPremio(totalVisitas);
+    }
 
   } catch (error) {
-
-    // -----------------------------
-    // ❌ ERROR
-    // -----------------------------
     mensaje.innerText = "❌ Error al guardar";
     mensaje.style.color = "red";
     console.error(error);
@@ -142,61 +103,47 @@ if (totalVisitas > 0 && totalVisitas % 6 === 0) {
 
 
 // =====================================================
-// 🔍 FUNCIÓN: CONSULTAR VISITAS (SELLOS)
+// 🔍 CONSULTAR
 // =====================================================
 
 window.consultar = async function () {
 
-  // -----------------------------
-  // 📥 OBTENER DATOS
-  // -----------------------------
   const input = document.getElementById("usuario");
   const mensaje = document.getElementById("mensaje");
   const usuario = input.value.trim();
 
-
-  // -----------------------------
-  // ⚠️ VALIDACIÓN
-  // -----------------------------
   if (usuario === "" || usuario.length !== 9) {
     mensaje.innerText = "⚠️ Número inválido";
     mensaje.style.color = "red";
     return;
   }
 
-
   try {
 
-    // -----------------------------
-    // 🔍 BUSCAR TODAS LAS VISITAS
-    // -----------------------------
     const q = query(
       collection(db, "visitas"),
       where("celular", "==", usuario)
     );
 
     const querySnapshot = await getDocs(q);
-
     const total = querySnapshot.size;
 
-
-    // -----------------------------
-    // ☕ MOSTRAR RESULTADO
-    // -----------------------------
     mensaje.innerText = `☕ Tienes ${total} visitas`;
-    mostrarTarjeta(total);
     mensaje.style.color = "black";
 
+    mostrarTarjeta(total);
 
   } catch (error) {
-
-    // -----------------------------
-    // ❌ ERROR
-    // -----------------------------
     mensaje.innerText = "❌ Error al consultar";
     mensaje.style.color = "red";
-    console.error(error);
   }
+};
+
+
+// =====================================================
+// 🎴 TARJETA VISUAL
+// =====================================================
+
 function mostrarTarjeta(total) {
 
   const tarjeta = document.getElementById("tarjeta");
@@ -206,20 +153,11 @@ function mostrarTarjeta(total) {
 
   tarjeta.classList.remove("oculto");
 
-  // -----------------------------
-  // 🪜 CALCULAR NIVEL
-  // -----------------------------
-  const nivel = Math.floor(total / 6) + 1;
-  const progreso = total % 6 === 0;
+  const nivel = Math.floor((total - 1) / 6) + 1;
+  const progreso = total % 6 === 0 ? 6 : total % 6;
 
-  // -----------------------------
-  // 📝 TEXTO DE NIVEL
-  // -----------------------------
   nivelTexto.innerText = `Nivel ${nivel}`;
 
-  // -----------------------------
-  // 🎁 PREMIOS POR NIVEL
-  // -----------------------------
   if (nivel === 1) {
     premioTexto.innerText = "☕ Tu bebida caliente favorita va por nuestra cuenta";
   } else if (nivel === 2) {
@@ -228,9 +166,6 @@ function mostrarTarjeta(total) {
     premioTexto.innerText = "🍹 Tu trago favorito va por nuestra cuenta";
   }
 
-  // -----------------------------
-  // 🔘 DIBUJAR SELLOS
-  // -----------------------------
   contenedor.innerHTML = "";
 
   for (let i = 1; i <= 6; i++) {
@@ -240,37 +175,24 @@ function mostrarTarjeta(total) {
 
     if (i <= progreso) {
       div.classList.add("activo");
-      div.innerHTML = `<img src="logo.png">`; // aquí luego podemos poner tu logo
+      div.innerHTML = `<img src="logo.png">`;
     }
 
-    // 🎯 EL SEXTO (PREMIO)
-    // -----------------------------
-    // 🎁 ICONO SEGÚN NIVEL
-    // -----------------------------
     if (i === 6) {
-    
-      if (nivel === 1) {
-        div.innerHTML = "☕";
-        div.style.background = "#6b4f3b"; // marrón
-        div.style.color = "white";
-      }
-    
-      else if (nivel === 2) {
-        div.innerHTML = "🍰";
-        div.style.background = "#c0392b"; // rojo
-        div.style.color = "white";
-      }
-    
-      else {
-        div.innerHTML = "🍹";
-        div.style.background = "#f1c40f"; // amarillo
-        div.style.color = "black";
-      }
-}
+      if (nivel === 1) div.innerHTML = "☕";
+      else if (nivel === 2) div.innerHTML = "🍰";
+      else div.innerHTML = "🍹";
+    }
 
     contenedor.appendChild(div);
   }
 }
+
+
+// =====================================================
+// 🎉 POPUP PREMIO
+// =====================================================
+
 function mostrarPremio(total) {
 
   const popup = document.getElementById("popup");
@@ -278,16 +200,11 @@ function mostrarPremio(total) {
 
   const nivel = Math.floor(total / 6);
 
-  // -----------------------------
-  // 🎁 MENSAJE SEGÚN NIVEL
-  // -----------------------------
   if (nivel === 1) {
     texto.innerText = "☕ Tu bebida caliente va por nuestra cuenta";
-  } 
-  else if (nivel === 2) {
+  } else if (nivel === 2) {
     texto.innerText = "🍰 Tu postre favorito va por nuestra cuenta";
-  } 
-  else {
+  } else {
     texto.innerText = "🍹 Tu trago favorito va por nuestra cuenta";
   }
 
@@ -295,10 +212,10 @@ function mostrarPremio(total) {
 }
 
 
-// -----------------------------
+// =====================================================
 // ❌ CERRAR POPUP
-// -----------------------------
+// =====================================================
+
 window.cerrarPopup = function () {
   document.getElementById("popup").classList.add("oculto");
-};
 };
