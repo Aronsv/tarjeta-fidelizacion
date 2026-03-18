@@ -223,7 +223,7 @@ function mostrarTarjeta(total) {
 
     if (i <= progreso) {
       div.classList.add("activo");
-      div.innerHTML = "☕"; // aquí luego podemos poner tu logo
+      div.innerHTML = `<img src="logo.png">`; // aquí luego podemos poner tu logo
     }
 
     // 🎯 EL SEXTO (PREMIO)
