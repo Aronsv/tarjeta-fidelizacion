@@ -91,7 +91,7 @@ window.registrar = async function () {
 
     // 🎉 MOSTRAR PREMIO SOLO SI > 0
     if (totalVisitas > 0 && totalVisitas % 6 === 0) {
-      mostrarPremio(totalVisitas);
+      mostrarPremio(totalVisitas, true);
     }
 
   } catch (error) {
@@ -144,27 +144,27 @@ window.consultar = async function () {
 // 🎴 TARJETA VISUAL
 // =====================================================
 
-function mostrarTarjeta(total) {
+function mostrarPremio(total, desdeRegistro = false) {
 
-  const tarjeta = document.getElementById("tarjeta");
-  const contenedor = document.getElementById("sellos");
-  const nivelTexto = document.getElementById("nivel");
-  const premioTexto = document.getElementById("premio");
+  if (!desdeRegistro) return;
 
-  tarjeta.classList.remove("oculto");
+  const popup = document.getElementById("popup");
+  const texto = document.getElementById("mensajePremio");
 
-  const nivel = Math.floor((total - 1) / 6) + 1;
-  const progreso = total % 6 === 0 ? 6 : total % 6;
-
-  nivelTexto.innerText = `Nivel ${nivel}`;
+  const nivel = Math.floor(total / 6);
 
   if (nivel === 1) {
-    premioTexto.innerText = "☕ Tu bebida caliente favorita va por nuestra cuenta";
-  } else if (nivel === 2) {
-    premioTexto.innerText = "🍰 Tu postre favorito va por nuestra cuenta";
-  } else {
-    premioTexto.innerText = "🍹 Tu trago favorito va por nuestra cuenta";
+    texto.innerText = "☕ Tu bebida caliente va por nuestra cuenta";
+  } 
+  else if (nivel === 2) {
+    texto.innerText = "🍰 Tu postre favorito va por nuestra cuenta";
+  } 
+  else {
+    texto.innerText = "🍹 Tu trago favorito va por nuestra cuenta";
   }
+
+  popup.classList.remove("oculto");
+}
 
   contenedor.innerHTML = "";
 
@@ -193,7 +193,7 @@ function mostrarTarjeta(total) {
 // 🎉 POPUP PREMIO
 // =====================================================
 
-function mostrarPremio(total) {
+function mostrarPremio(total, desdeRegistro = false) {
 
   const popup = document.getElementById("popup");
   const texto = document.getElementById("mensajePremio");
