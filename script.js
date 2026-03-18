@@ -254,4 +254,11 @@ function mostrarTarjeta(total) {
     contenedor.appendChild(div);
   }
 }
+  // Bton de prueba
+  let modoPrueba = false;
+
+window.modoTest = function () {
+  modoPrueba = true;
+  alert("🧪 Modo prueba activado");
+};
 };
