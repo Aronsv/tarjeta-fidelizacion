@@ -122,7 +122,7 @@ const totalVisitas = (await getDocs(
   query(collection(db, "visitas"), where("celular", "==", usuario))
 )).size;
 
-if (totalVisitas % 6 === 0) {
+if (totalVisitas > 0 && totalVisitas % 6 === 0) {
   mostrarPremio(totalVisitas);
 }
     mensaje.style.color = "green";
