@@ -167,6 +167,7 @@ window.consultar = async function () {
     // ☕ MOSTRAR RESULTADO
     // -----------------------------
     mensaje.innerText = `☕ Tienes ${total} visitas`;
+    mostrarTarjeta(total);
     mensaje.style.color = "black";
 
 
@@ -179,4 +180,58 @@ window.consultar = async function () {
     mensaje.style.color = "red";
     console.error(error);
   }
+function mostrarTarjeta(total) {
+
+  const tarjeta = document.getElementById("tarjeta");
+  const contenedor = document.getElementById("sellos");
+  const nivelTexto = document.getElementById("nivel");
+  const premioTexto = document.getElementById("premio");
+
+  tarjeta.classList.remove("oculto");
+
+  // -----------------------------
+  // 🪜 CALCULAR NIVEL
+  // -----------------------------
+  const nivel = Math.floor(total / 6) + 1;
+  const progreso = total % 6;
+
+  // -----------------------------
+  // 📝 TEXTO DE NIVEL
+  // -----------------------------
+  nivelTexto.innerText = `Nivel ${nivel}`;
+
+  // -----------------------------
+  // 🎁 PREMIOS POR NIVEL
+  // -----------------------------
+  if (nivel === 1) {
+    premioTexto.innerText = "☕ Tu bebida caliente favorita va por nuestra cuenta";
+  } else if (nivel === 2) {
+    premioTexto.innerText = "🍰 Tu postre favorito va por nuestra cuenta";
+  } else {
+    premioTexto.innerText = "🍹 Tu trago favorito va por nuestra cuenta";
+  }
+
+  // -----------------------------
+  // 🔘 DIBUJAR SELLOS
+  // -----------------------------
+  contenedor.innerHTML = "";
+
+  for (let i = 1; i <= 6; i++) {
+
+    const div = document.createElement("div");
+    div.classList.add("sello");
+
+    if (i <= progreso) {
+      div.classList.add("activo");
+      div.innerHTML = "☕"; // aquí luego podemos poner tu logo
+    }
+
+    // 🎯 EL SEXTO (PREMIO)
+    if (i === 6) {
+      div.innerHTML = "🎁";
+    }
+
+    contenedor.appendChild(div);
+  }
+}
 };
