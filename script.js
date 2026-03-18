@@ -1,4 +1,12 @@
 // IMPORTAR FIREBASE
+import { 
+  getFirestore, 
+  collection, 
+  addDoc, 
+  query, 
+  where, 
+  getDocs 
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
@@ -28,7 +36,33 @@ window.registrar = async function () {
     return;
   }
 
+  const db = getFirestore();
+
+  // 📅 obtener fecha de hoy (solo día)
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+
+  const mañana = new Date(hoy);
+  mañana.setDate(mañana.getDate() + 1);
+
   try {
+    // 🔍 buscar si ya registró hoy
+    const q = query(
+      collection(db, "visitas"),
+      where("celular", "==", usuario),
+      where("fecha", ">=", hoy),
+      where("fecha", "<", mañana)
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      mensaje.innerText = "⚠️ Ya registraste hoy";
+      mensaje.style.color = "orange";
+      return;
+    }
+
+    // ✅ guardar si no existe
     await addDoc(collection(db, "visitas"), {
       celular: usuario,
       fecha: new Date()
