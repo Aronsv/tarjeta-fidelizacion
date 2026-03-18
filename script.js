@@ -84,20 +84,17 @@ window.registrar = async function () {
     mensaje.style.color = "green";
     input.value = "";
 
-    // 🔥 OBTENER TOTAL
     const totalVisitas = (await getDocs(
       query(collection(db, "visitas"), where("celular", "==", usuario))
     )).size;
 
-    // 🎉 MOSTRAR PREMIO SOLO SI > 0
     if (totalVisitas > 0 && totalVisitas % 6 === 0) {
-      mostrarPremio(totalVisitas, true);
+      mostrarPremio(totalVisitas);
     }
 
   } catch (error) {
     mensaje.innerText = "❌ Error al guardar";
     mensaje.style.color = "red";
-    console.error(error);
   }
 };
 
@@ -135,36 +132,35 @@ window.consultar = async function () {
 
   } catch (error) {
     mensaje.innerText = "❌ Error al consultar";
-    mensaje.style.color = "red";
   }
 };
 
 
 // =====================================================
-// 🎴 TARJETA VISUAL
+// 🎴 TARJETA
 // =====================================================
 
-function mostrarPremio(total, desdeRegistro = false) {
+function mostrarTarjeta(total) {
 
-  if (!desdeRegistro) return;
+  const tarjeta = document.getElementById("tarjeta");
+  const contenedor = document.getElementById("sellos");
+  const nivelTexto = document.getElementById("nivel");
+  const premioTexto = document.getElementById("premio");
 
-  const popup = document.getElementById("popup");
-  const texto = document.getElementById("mensajePremio");
+  tarjeta.classList.remove("oculto");
 
-  const nivel = Math.floor(total / 6);
+  const nivel = Math.floor((total - 1) / 6) + 1;
+  const progreso = total % 6 === 0 ? 6 : total % 6;
+
+  nivelTexto.innerText = `Nivel ${nivel}`;
 
   if (nivel === 1) {
-    texto.innerText = "☕ Tu bebida caliente va por nuestra cuenta";
-  } 
-  else if (nivel === 2) {
-    texto.innerText = "🍰 Tu postre favorito va por nuestra cuenta";
-  } 
-  else {
-    texto.innerText = "🍹 Tu trago favorito va por nuestra cuenta";
+    premioTexto.innerText = "☕ Tu bebida caliente favorita va por nuestra cuenta";
+  } else if (nivel === 2) {
+    premioTexto.innerText = "🍰 Tu postre favorito va por nuestra cuenta";
+  } else {
+    premioTexto.innerText = "🍹 Tu trago favorito va por nuestra cuenta";
   }
-
-  popup.classList.remove("oculto");
-}
 
   contenedor.innerHTML = "";
 
@@ -190,10 +186,10 @@ function mostrarPremio(total, desdeRegistro = false) {
 
 
 // =====================================================
-// 🎉 POPUP PREMIO
+// 🎉 POPUP
 // =====================================================
 
-function mostrarPremio(total, desdeRegistro = false) {
+function mostrarPremio(total) {
 
   const popup = document.getElementById("popup");
   const texto = document.getElementById("mensajePremio");
@@ -213,7 +209,7 @@ function mostrarPremio(total, desdeRegistro = false) {
 
 
 // =====================================================
-// ❌ CERRAR POPUP
+// ❌ CERRAR
 // =====================================================
 
 window.cerrarPopup = function () {
