@@ -227,9 +227,29 @@ function mostrarTarjeta(total) {
     }
 
     // 🎯 EL SEXTO (PREMIO)
+    // -----------------------------
+    // 🎁 ICONO SEGÚN NIVEL
+    // -----------------------------
     if (i === 6) {
-      div.innerHTML = "🎁";
-    }
+    
+      if (nivel === 1) {
+        div.innerHTML = "☕";
+        div.style.background = "#6b4f3b"; // marrón
+        div.style.color = "white";
+      }
+    
+      else if (nivel === 2) {
+        div.innerHTML = "🍰";
+        div.style.background = "#c0392b"; // rojo
+        div.style.color = "white";
+      }
+    
+      else {
+        div.innerHTML = "🍹";
+        div.style.background = "#f1c40f"; // amarillo
+        div.style.color = "black";
+      }
+}
 
     contenedor.appendChild(div);
   }
