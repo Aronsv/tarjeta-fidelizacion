@@ -35,6 +35,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// =====================================================
+// 🧪 MODO PRUEBA
+// =====================================================
+
+let modoPrueba = false;
+
+window.modoTest = function () {
+  modoPrueba = true;
+  alert("🧪 Modo prueba activado");
+};
 
 // =====================================================
 // ✅ FUNCIÓN: REGISTRAR VISITA (CON VALIDACIÓN Y CONTROL POR DÍA)
@@ -254,11 +264,4 @@ function mostrarTarjeta(total) {
     contenedor.appendChild(div);
   }
 }
-  // Bton de prueba
-  let modoPrueba = false;
-
-window.modoTest = function () {
-  modoPrueba = true;
-  alert("🧪 Modo prueba activado");
-};
 };
