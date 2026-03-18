@@ -88,7 +88,7 @@ window.registrar = async function () {
     // -----------------------------
     // 🚫 SI YA EXISTE → BLOQUEAR
     // -----------------------------
-    if (!querySnapshot.empty) {
+    if (!querySnapshot.empty && !modoPrueba) {
       mensaje.innerText = "⚠️ Ya registraste hoy";
       mensaje.style.color = "orange";
       return;
