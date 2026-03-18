@@ -83,3 +83,7 @@ button {
   object-fit: cover;   /* recorta sin deformar */
   border-radius: 50%;  /* lo hace circular */
 }
+.activo {
+  background: #6b4f3b;
+  color: white;
+}
