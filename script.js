@@ -165,21 +165,29 @@ function mostrarTarjeta(total) {
   contenedor.innerHTML = "";
 
   for (let i = 1; i <= 6; i++) {
-
+  
     const div = document.createElement("div");
     div.classList.add("sello");
-
+  
+    // 💓 SI TIENE 5 → PULSO EN EL ÚLTIMO
+    if (progreso === 5 && i === 6) {
+      div.classList.add("pulso");
+    }
+  
+    // ✅ SELLOS ACTIVOS
     if (i <= progreso) {
       div.classList.add("activo");
-      div.innerHTML = `<img src="logo.png">`;
+  
+      // 🔥 SI ES EL SEXTO COMPLETADO → MOSTRAR PREMIO
+      if (i === 6) {
+        if (nivel === 1) div.innerHTML = "☕";
+        else if (nivel === 2) div.innerHTML = "🍰";
+        else div.innerHTML = "🍹";
+      } else {
+        div.innerHTML = `<img src="logo.png">`;
+      }
     }
-
-    if (i === 6) {
-      if (nivel === 1) div.innerHTML = "☕";
-      else if (nivel === 2) div.innerHTML = "🍰";
-      else div.innerHTML = "🍹";
-    }
-
+  
     contenedor.appendChild(div);
   }
 }
