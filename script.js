@@ -98,6 +98,67 @@ window.registrar = async function () {
   }
 };
 
+// =====================================================
+// 📩 SOLICITAR SELLO (FASE 1)
+// =====================================================
+
+window.solicitar = async function () {
+
+  const input = document.getElementById("usuario");
+  const mensaje = document.getElementById("mensaje");
+  const usuario = input.value.trim();
+
+  // -----------------------------
+  // ⚠️ VALIDACIÓN
+  // -----------------------------
+  if (usuario === "" || usuario.length !== 9) {
+    mensaje.innerText = "⚠️ Número inválido";
+    mensaje.style.color = "red";
+    return;
+  }
+
+  try {
+
+    // -----------------------------
+    // 📅 FECHA ACTUAL
+    // -----------------------------
+    const ahora = new Date();
+
+    // -----------------------------
+    // 🔍 EVITAR DUPLICADOS PENDIENTES
+    // -----------------------------
+    const q = query(
+      collection(db, "solicitudes"),
+      where("celular", "==", usuario)
+    );
+
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      mensaje.innerText = "⏳ Ya tienes una solicitud pendiente";
+      mensaje.style.color = "orange";
+      return;
+    }
+
+    // -----------------------------
+    // ✅ GUARDAR SOLICITUD
+    // -----------------------------
+    await addDoc(collection(db, "solicitudes"), {
+      celular: usuario,
+      fecha: ahora,
+      estado: "pendiente"
+    });
+
+    mensaje.innerText = "✅ Solicitud enviada";
+    mensaje.style.color = "green";
+    input.value = "";
+
+  } catch (error) {
+    mensaje.innerText = "❌ Error al enviar solicitud";
+    mensaje.style.color = "red";
+    console.error(error);
+  }
+};
 
 // =====================================================
 // 🔍 CONSULTAR
