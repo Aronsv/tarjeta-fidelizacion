@@ -140,6 +140,10 @@ window.consultar = async function () {
 // 🎴 TARJETA
 // =====================================================
 
+// =====================================================
+// 🎴 TARJETA
+// =====================================================
+
 function mostrarTarjeta(total) {
 
   const tarjeta = document.getElementById("tarjeta");
@@ -162,10 +166,41 @@ function mostrarTarjeta(total) {
     premioTexto.innerText = "🍹 Tu trago favorito va por nuestra cuenta";
   }
 
+  // 🔥 LIMPIAR CONTENEDOR
   contenedor.innerHTML = "";
 
-111111111
-  
+  // 🔥 CREAR LOS 6 SELLOS
+  for (let i = 1; i <= 6; i++) {
+
+    const div = document.createElement("div");
+    div.classList.add("sello");
+
+    // 💓 PULSO SI VA 5/6
+    if (progreso === 5 && i === 6) {
+      div.classList.add("pulso");
+    }
+
+    // ✅ SELLOS ACTIVOS
+    if (i <= progreso) {
+      div.classList.add("activo");
+
+      // 🔘 SEXTO SELLO (PREMIO)
+      if (i === 6) {
+
+        if (nivel === 1) div.innerHTML = "☕";
+        else if (nivel === 2) div.innerHTML = "🍰";
+        else div.innerHTML = "🍹";
+
+        // 🎯 REBOTE SOLO CUANDO SE COMPLETA
+        if (progreso === 6) {
+          div.classList.add("rebote");
+        }
+
+      } else {
+        div.innerHTML = `<img src="logo.png">`;
+      }
+    }
+
     contenedor.appendChild(div);
   }
 }
@@ -194,12 +229,7 @@ function mostrarPremio(total) {
 
   // 🎉 LANZAR CONFETTI
   lanzarConfetti();
-
   // 🔘 ACTIVAR REBOTE DEL SELLO 6 (SI ESTÁ VISIBLE)
-  const sellos = document.querySelectorAll(".sello");
-  if (sellos.length === 6) {
-    sellos[5].classList.add("rebote");
-  }
 }
 
 
