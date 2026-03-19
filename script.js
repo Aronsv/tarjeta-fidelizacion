@@ -213,6 +213,15 @@ function mostrarPremio(total) {
   }
 
   popup.classList.add("mostrar");
+
+  // 🎉 LANZAR CONFETTI
+  lanzarConfetti();
+
+  // 🔘 ACTIVAR REBOTE DEL SELLO 6 (SI ESTÁ VISIBLE)
+  const sellos = document.querySelectorAll(".sello");
+  if (sellos.length === 6) {
+    sellos[5].classList.add("rebote");
+  }
 }
 
 
@@ -224,3 +233,27 @@ window.cerrarPopup = function () {
   const popup = document.getElementById("popup");
   popup.classList.remove("mostrar");
 };
+// =====================================================
+// 🎉 CONFETTI
+// =====================================================
+
+function lanzarConfetti() {
+
+  for (let i = 0; i < 40; i++) {
+
+    const confetti = document.createElement("div");
+    confetti.classList.add("confetti");
+
+    // posición horizontal aleatoria
+    confetti.style.left = Math.random() * 100 + "vw";
+
+    // colores aleatorios
+    const colores = ["#f1c40f", "#e74c3c", "#3498db", "#2ecc71"];
+    confetti.style.background = colores[Math.floor(Math.random() * colores.length)];
+
+    document.body.appendChild(confetti);
+
+    // eliminar después de animación
+    setTimeout(() => confetti.remove(), 2000);
+  }
+}
