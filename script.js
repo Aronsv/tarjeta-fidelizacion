@@ -214,8 +214,16 @@ function mostrarTarjeta(total) {
 
   tarjeta.classList.remove("oculto");
 
-  const nivel = Math.floor((total - 1) / 6) + 1;
-  const progreso = total % 6 === 0 ? 6 : total % 6;
+  // 🧠 MANEJO CORRECTO CUANDO ES 0
+  let nivel, progreso;
+  
+  if (total === 0) {
+    nivel = 1;
+    progreso = 0;
+  } else {
+    nivel = Math.floor((total - 1) / 6) + 1;
+    progreso = total % 6 === 0 ? 6 : total % 6;
+  }
 
   nivelTexto.innerText = `Nivel ${nivel}`;
 
